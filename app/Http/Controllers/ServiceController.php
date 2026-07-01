@@ -1,7 +1,7 @@
 <?php
 
-
 namespace App\Http\Controllers;
+
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -9,100 +9,151 @@ use Illuminate\Support\Facades\Storage;
 class ServiceController extends Controller
 {
     public function index(Request $request)
-{
-    $search = $request->search;
+    {
+        $search = $request->search;
+        $user = auth()->user();
 
-    $services = Service::when($search, function ($query) use ($search) {
+        // Belum login = semua jasa (Landing Page)
+        if (!$user) {
 
-    $query->where('title', 'like', '%' . $search . '%');
+            $services = Service::when($search, function ($query) use ($search) {
 
-})->paginate(6);
+                $query->where('title', 'like', '%' . $search . '%');
 
-    return view('services.index', compact('services'));
-}
+            })
+            ->latest()
+            ->paginate(6);
 
-    public function show(Service $service)
-{
-    return view('services.show', compact('service'));
-}
+        }
+        // Super Admin = semua jasa
+        elseif ($user->isSuperAdmin()) {
 
-    public function create()
-{
-    return view('services.create');
-}
+            $services = Service::when($search, function ($query) use ($search) {
 
-   public function store(Request $request)
-{
-    $validated = $request->validate([
+                $query->where('title', 'like', '%' . $search . '%');
 
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            })
+            ->latest()
+            ->paginate(6);
 
-        'icon' => 'required|max:10',
+        }
+        // Seller = hanya jasa miliknya
+        elseif ($user->isSeller()) {
 
-        'title' => 'required|max:255',
+            $services = $user->services()
 
-        'description' => 'required',
+                ->when($search, function ($query) use ($search) {
 
-    ]);
+                    $query->where('title', 'like', '%' . $search . '%');
 
-    if ($request->hasFile('image')) {
+                })
 
-        $validated['image'] = $request
-            ->file('image')
-            ->store('services', 'public');
+                ->latest()
+                ->paginate(6);
 
+        }
+        // Customer = semua jasa
+        else {
+
+            $services = Service::when($search, function ($query) use ($search) {
+
+                $query->where('title', 'like', '%' . $search . '%');
+
+            })
+            ->latest()
+            ->paginate(6);
+
+        }
+
+        return view('services.index', compact('services'));
     }
 
-    Service::create($validated);
+    public function show(Service $service)
+    {
+        return view('services.show', compact('service'));
+    }
 
-    return redirect()
-        ->route('services.index')
-        ->with('success', 'Jasa berhasil ditambahkan!');
-}
+    public function create()
+    {
+        return view('services.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'icon' => 'required|max:10',
+
+            'title' => 'required|max:255',
+
+            'description' => 'required',
+
+        ]);
+
+        if ($request->hasFile('image')) {
+
+            $validated['image'] = $request
+                ->file('image')
+                ->store('services', 'public');
+
+        }
+
+        auth()->user()->services()->create($validated);
+
+        return redirect()
+            ->route('services.index')
+            ->with('success', 'Jasa berhasil ditambahkan!');
+    }
 
     public function edit(Service $service)
-{
-    return view('services.edit', compact('service'));
-}
+    {
+        return view('services.edit', compact('service'));
+    }
 
     public function update(Request $request, Service $service)
-{
-    $validated = $request->validate([
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        'icon' => 'required|max:10',
-        'title' => 'required|max:255',
-        'description' => 'required',
-    ]);
-    
-    if ($request->hasFile('image')) {
-        // Delete the old image if it exists
+    {
+        $validated = $request->validate([
+
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+
+            'icon' => 'required|max:10',
+
+            'title' => 'required|max:255',
+
+            'description' => 'required',
+
+        ]);
+
+        if ($request->hasFile('image')) {
+
+            if ($service->image) {
+                Storage::disk('public')->delete($service->image);
+            }
+
+            $validated['image'] = $request
+                ->file('image')
+                ->store('services', 'public');
+        }
+
+        $service->update($validated);
+
+        return redirect()
+            ->route('services.show', $service)
+            ->with('success', 'Jasa berhasil diperbarui!');
+    }
+
+    public function destroy(Service $service)
+    {
         if ($service->image) {
             Storage::disk('public')->delete($service->image);
         }
 
-        $validated['image'] = $request
-            ->file('image')
-            ->store('services', 'public');
+        $service->delete();
+
+        return redirect()
+            ->route('services.index')
+            ->with('success', 'Jasa berhasil dihapus.');
     }
-
-    $service->update($validated);
-
-    return redirect()
-        ->route('services.show', $service)
-        ->with('success', 'Jasa berhasil diperbarui!');
-}
-
-    public function destroy(Service $service)
-{
-    if ($service->image) {
-        Storage::disk('public')->delete($service->image);
-    }
-
-    $service->delete();
-
-    return redirect()
-        ->route('services.index')
-        ->with('success', 'Jasa berhasil dihapus.');
-}
-
 }

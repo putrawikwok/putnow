@@ -14,11 +14,11 @@ Route::get('/jasa', [ServiceController::class, 'index'])
     ->name('services.index');
 
 Route::get('/jasa/create', [ServiceController::class, 'create'])
-    ->middleware('role:super_admin')
+    ->middleware('role:super_admin,seller')
     ->name('services.create');
 
 Route::post('/jasa', [ServiceController::class, 'store'])
-    ->middleware('role:super_admin')
+    ->middleware('role:super_admin,seller')
     ->name('services.store');
 
 Route::get('/jasa/{service}/edit', [ServiceController::class, 'edit'])
