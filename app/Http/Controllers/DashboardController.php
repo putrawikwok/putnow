@@ -3,21 +3,37 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Service;
 
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        if ($user->isSuperAdmin()) {
-            return view('dashboard.superadmin');
-        }
+    if ($user->isSuperAdmin()) {
 
-        if ($user->isSeller()) {
-            return view('dashboard.seller');
-        }
+        $totalUsers = User::count();
 
-        return view('dashboard.customer');
+        $totalCustomers = User::where('role', 'customer')->count();
+
+        $totalSellers = User::where('role', 'seller')->count();
+
+        $totalServices = Service::count();
+
+        return view('dashboard.superadmin', compact(
+            'totalUsers',
+            'totalCustomers',
+            'totalSellers',
+            'totalServices'
+        ));
     }
+
+    if ($user->isSeller()) {
+        return view('dashboard.seller');
+    }
+
+    return view('dashboard.customer');
+}
 }
