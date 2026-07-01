@@ -18,16 +18,46 @@
 
             <!-- Tombol -->
             <div class="space-x-3">
-                <a href="/login"
-                   class="px-4 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-600 hover:text-white transition">
-                    Masuk
-                </a>
 
-                <a href="/register"
-                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                    Daftar
-                </a>
-            </div>
+    @guest
+
+        <a href="{{ route('login') }}"
+           class="px-4 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-600 hover:text-white transition">
+            Masuk
+        </a>
+
+        <a href="{{ route('register') }}"
+           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Daftar
+        </a>
+
+    @else
+
+        <span class="font-semibold text-gray-700">
+            Halo, {{ Auth::user()->name }}
+        </span>
+
+        <a href="{{ route('dashboard') }}"
+           class="px-4 py-2 border border-blue-600 rounded-lg text-blue-600 hover:bg-blue-600 hover:text-white transition">
+            Dashboard
+        </a>
+
+        <form action="{{ route('logout') }}" method="POST" class="inline">
+            @csrf
+
+            <button
+                type="submit"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+
+                Logout
+
+            </button>
+
+        </form>
+
+    @endguest
+
+</div>
 
         </div>
     </div>
