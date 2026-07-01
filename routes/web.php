@@ -22,15 +22,15 @@ Route::post('/jasa', [ServiceController::class, 'store'])
     ->name('services.store');
 
 Route::get('/jasa/{service}/edit', [ServiceController::class, 'edit'])
-    ->middleware('role:super_admin')
+    ->middleware('role:super_admin,seller')
     ->name('services.edit');
-    
+
 Route::put('/jasa/{service}', [ServiceController::class, 'update'])
-    ->middleware('role:super_admin')
+    ->middleware('role:super_admin,seller')
     ->name('services.update');
 
 Route::delete('/jasa/{service}', [ServiceController::class, 'destroy'])
-    ->middleware('role:super_admin')
+    ->middleware('role:super_admin,seller')
     ->name('services.destroy');
 
 Route::get('/jasa/{service}', [ServiceController::class, 'show'])

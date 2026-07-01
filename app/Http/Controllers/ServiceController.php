@@ -13,52 +13,45 @@ class ServiceController extends Controller
         $search = $request->search;
         $user = auth()->user();
 
-        // Belum login = semua jasa (Landing Page)
+        // Belum login
         if (!$user) {
 
             $services = Service::when($search, function ($query) use ($search) {
-
-                $query->where('title', 'like', '%' . $search . '%');
-
+                $query->where('title', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(6);
 
         }
-        // Super Admin = semua jasa
+
+        // Super Admin
         elseif ($user->isSuperAdmin()) {
 
             $services = Service::when($search, function ($query) use ($search) {
-
-                $query->where('title', 'like', '%' . $search . '%');
-
+                $query->where('title', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(6);
 
         }
-        // Seller = hanya jasa miliknya
+
+        // Seller
         elseif ($user->isSeller()) {
 
             $services = $user->services()
-
                 ->when($search, function ($query) use ($search) {
-
-                    $query->where('title', 'like', '%' . $search . '%');
-
+                    $query->where('title', 'like', "%{$search}%");
                 })
-
                 ->latest()
                 ->paginate(6);
 
         }
-        // Customer = semua jasa
+
+        // Customer
         else {
 
             $services = Service::when($search, function ($query) use ($search) {
-
-                $query->where('title', 'like', '%' . $search . '%');
-
+                $query->where('title', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(6);
@@ -81,15 +74,10 @@ class ServiceController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
             'icon' => 'required|max:10',
-
             'title' => 'required|max:255',
-
             'description' => 'required',
-
         ]);
 
         if ($request->hasFile('image')) {
@@ -97,7 +85,6 @@ class ServiceController extends Controller
             $validated['image'] = $request
                 ->file('image')
                 ->store('services', 'public');
-
         }
 
         auth()->user()->services()->create($validated);
@@ -109,21 +96,34 @@ class ServiceController extends Controller
 
     public function edit(Service $service)
     {
+        $user = auth()->user();
+
+        if (
+            $user->isSeller() &&
+            $service->user_id != $user->id
+        ) {
+            abort(403);
+        }
+
         return view('services.edit', compact('service'));
     }
 
     public function update(Request $request, Service $service)
     {
+        $user = auth()->user();
+
+        if (
+            $user->isSeller() &&
+            $service->user_id != $user->id
+        ) {
+            abort(403);
+        }
+
         $validated = $request->validate([
-
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-
             'icon' => 'required|max:10',
-
             'title' => 'required|max:255',
-
             'description' => 'required',
-
         ]);
 
         if ($request->hasFile('image')) {
@@ -146,6 +146,15 @@ class ServiceController extends Controller
 
     public function destroy(Service $service)
     {
+        $user = auth()->user();
+
+        if (
+            $user->isSeller() &&
+            $service->user_id != $user->id
+        ) {
+            abort(403);
+        }
+
         if ($service->image) {
             Storage::disk('public')->delete($service->image);
         }
@@ -154,6 +163,6 @@ class ServiceController extends Controller
 
         return redirect()
             ->route('services.index')
-            ->with('success', 'Jasa berhasil dihapus.');
+            ->with('success', 'Jasa berhasil dihapus!');
     }
 }
