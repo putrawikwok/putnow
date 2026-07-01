@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\HomeController;
 
@@ -38,6 +39,19 @@ Route::get('/jasa/{service}', [ServiceController::class, 'show'])
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
+
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('users.index');
+
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])
+    ->name('users.edit');
+
+Route::put('/users/{user}', [UserController::class, 'update'])
+    ->name('users.update');
+
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
