@@ -8,7 +8,9 @@
 
     @include('services.search')
 
-    @include('services.cards')
+    <div id="services-container">
+        @include('services.cards')
+    </div>
 
 </section>
 

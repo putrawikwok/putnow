@@ -20,7 +20,7 @@ class ServiceController extends Controller
                 $query->where('title', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(6);
+            ->paginate(8);
 
         }
 
@@ -31,7 +31,7 @@ class ServiceController extends Controller
                 $query->where('title', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(6);
+            ->paginate(8);
 
         }
 
@@ -43,7 +43,7 @@ class ServiceController extends Controller
                     $query->where('title', 'like', "%{$search}%");
                 })
                 ->latest()
-                ->paginate(6);
+                ->paginate(8);
 
         }
 
@@ -54,7 +54,7 @@ class ServiceController extends Controller
                 $query->where('title', 'like', "%{$search}%");
             })
             ->latest()
-            ->paginate(6);
+            ->paginate(8);
 
         }
 

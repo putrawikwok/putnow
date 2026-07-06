@@ -7,23 +7,20 @@
     <div class="flex justify-between items-center mb-8">
 
         <div>
-            <h1 class="text-4xl font-bold">
+            <h1 class="text-h1">
                 🏪 Dashboard Seller
             </h1>
 
-            <p class="mt-2 text-gray-600">
+            <p class="mt-2 text-body">
                 Selamat datang, <b>{{ auth()->user()->name }}</b> 👋
             </p>
         </div>
 
-        <a href="{{ route('services.create') }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg font-semibold">
-            + Tambah Jasa
-        </a>
+
 
     </div>
 
-    <h2 class="text-2xl font-bold mb-6">
+    <h2 class="text-h2 mb-6">
         Jasa Saya
     </h2>
 
@@ -46,7 +43,7 @@
                         {{ $service->icon }}
                     </div>
 
-                    <h3 class="text-xl font-bold">
+                    <h3 class="text-h2 text-xl">
                         {{ $service->title }}
                     </h3>
 
@@ -57,18 +54,19 @@
                     <div class="flex gap-3 mt-6">
 
                         <a href="{{ route('services.edit', $service) }}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded" wire:navigate>
                             ✏ Edit
                         </a>
 
                         <form action="{{ route('services.destroy', $service) }}"
-                              method="POST">
+                              method="POST"
+                              class="swal-confirm">
 
                             @csrf
                             @method('DELETE')
 
                             <button
-                                onclick="return confirm('Yakin ingin menghapus jasa ini?')"
+                                type="submit"
                                 class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
 
                                 🗑 Hapus
@@ -97,17 +95,18 @@
                 Mulailah menawarkan jasa pertamamu.
             </p>
 
-            <a href="{{ route('services.create') }}"
-               class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg">
-
+            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'create-service')"
+               class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-lg text-sm font-bold transition">
                 + Tambah Jasa
-
-            </a>
+            </button>
 
         </div>
 
     @endif
 
 </div>
+
+<!-- Include the Create Service Modal -->
+<x-create-service-modal />
 
 @endsection

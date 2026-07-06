@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    /* Judul Paling Besar */
+    .text-display {
+        @apply text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight leading-tight;
+    }
+
+    /* Judul Halaman Utama */
+    .text-h1 {
+        @apply text-xl sm:text-2xl font-bold text-gray-900 tracking-tight;
+    }
+
+    /* Judul Bagian/Section */
+    .text-h2 {
+        @apply text-lg sm:text-xl font-bold text-gray-800;
+    }
+
+    /* Teks Paragraf Biasa */
+    .text-body {
+        @apply text-sm text-gray-600 leading-relaxed;
+    }
+
+    /* Teks Kecil/Keterangan Tambahan */
+    .text-caption {
+        @apply text-xs text-gray-400 font-medium tracking-wide;
+    }
+}

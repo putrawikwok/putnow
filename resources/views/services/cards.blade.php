@@ -1,37 +1,9 @@
 @if ($services->count())
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
 
     @foreach ($services as $service)
-
-        <div class="bg-white rounded-2xl shadow-md p-8 hover:-translate-y-2 hover:shadow-xl transition duration-300">
-
-            @if($service->image)
-    <img
-        src="{{ asset('storage/' . $service->image) }}"
-        alt="{{ $service->title }}"
-        class="w-full h-48 object-cover rounded-xl">
-@else
-    <div class="text-5xl">
-        {{ $service->icon }}
-    </div>
-@endif
-
-            <h2 class="mt-6 text-2xl font-bold">
-                {{ $service->title }}
-            </h2>
-
-            <p class="mt-4 text-gray-600">
-                {{ $service->description }}
-            </p>
-
-            <a href="{{ route('services.show', $service->id) }}"
-               class="inline-block mt-6 text-blue-600 font-semibold hover:underline">
-                Lihat Detail →
-            </a>
-
-        </div>
-
+        <x-service-card :service="$service" />
     @endforeach
 
 </div>

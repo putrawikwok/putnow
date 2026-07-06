@@ -20,6 +20,10 @@
         type="file"
         name="image"
         class="w-full border rounded-lg p-3">
+    
+    @error('image')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 
 </div>
 
@@ -35,6 +39,10 @@
             value="{{ old('icon', $service->icon ?? '') }}"
             class="w-full border rounded-lg p-3">
 
+        @error('icon')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
     </div>
 
     <div>
@@ -49,6 +57,10 @@
             value="{{ old('title', $service->title ?? '') }}"
             class="w-full border rounded-lg p-3">
 
+        @error('title')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
+
     </div>
 
     <div>
@@ -61,6 +73,10 @@
             name="description"
             rows="5"
             class="w-full border rounded-lg p-3">{{ old('description', $service->description ?? '') }}</textarea>
+
+        @error('description')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
 
     </div>
 

@@ -1,73 +1,51 @@
-@extends('layouts.putnow')
+@extends('layouts.admin')
 
-@section('content')
+@section('admin-content')
 
-<div class="max-w-7xl mx-auto py-10 px-6">
+<div>
 
-    <h1 class="text-4xl font-bold text-blue-600">
+    <h1 class="text-2xl font-bold text-blue-600">
         👥 Manajemen User
     </h1>
 
-    <p class="text-gray-600 mt-2">
+    <p class="text-xs text-gray-500 mt-1">
         Daftar seluruh pengguna PutNow.
     </p>
 
-    <div class="mt-8 bg-white rounded-2xl shadow overflow-hidden">
+    <div class="mt-6 border border-gray-100 rounded-lg overflow-hidden">
 
         <table class="w-full">
 
-            <thead class="bg-gray-100">
-
+            <thead class="bg-gray-50 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wider">
                 <tr>
-
-                    <th class="p-4 text-left">ID</th>
-
-                    <th class="p-4 text-left">Nama</th>
-
-                    <th class="p-4 text-left">Email</th>
-
-                    <th class="p-4 text-left">Role</th>
-
-                    <th class="p-4 text-center">Action</th>
-
+                    <th class="px-4 py-3 text-left font-medium">ID</th>
+                    <th class="px-4 py-3 text-left font-medium">Nama</th>
+                    <th class="px-4 py-3 text-left font-medium">Email</th>
+                    <th class="px-4 py-3 text-left font-medium">Role</th>
+                    <th class="px-4 py-3 text-center font-medium">Action</th>
                 </tr>
-
             </thead>
 
-            <tbody>
-
+            <tbody class="text-sm text-gray-700">
                 @foreach($users as $user)
-
-                <tr class="border-t">
-
-                    <td class="p-4">
-                        {{ $user->id }}
+                <tr class="border-b border-gray-50 hover:bg-gray-50 transition">
+                    <td class="px-4 py-3">{{ $user->id }}</td>
+                    <td class="px-4 py-3 font-medium">{{ $user->name }}</td>
+                    <td class="px-4 py-3 text-gray-500">{{ $user->email }}</td>
+                    <td class="px-4 py-3">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold 
+                            {{ $user->role == 'super_admin' ? 'bg-red-100 text-red-700' : ($user->role == 'seller' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700') }}">
+                            {{ strtoupper($user->role) }}
+                        </span>
                     </td>
-
-                    <td class="p-4">
-                        {{ $user->name }}
-                    </td>
-
-                    <td class="p-4">
-                        {{ $user->email }}
-                    </td>
-
-                    <td class="p-4">
-                        {{ $user->role }}
-                    </td>
-
-                    <td class="p-4 text-center">
-
+                    <td class="px-4 py-3 text-center">
                         <a href="{{ route('users.edit', $user) }}"
-                            class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600">
+                            class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded hover:bg-blue-600 hover:text-white transition text-xs font-semibold">
                                 Edit
                         </a>
                     </td>
-
                 </tr>
-
                 @endforeach
-
             </tbody>
 
         </table>

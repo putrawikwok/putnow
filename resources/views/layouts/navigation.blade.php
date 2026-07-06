@@ -5,16 +5,31 @@
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('dashboard') }}" wire:navigate>
                         <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                     </a>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.index')" wire:navigate>
+                        {{ __('Jelajahi Jasa') }}
+                    </x-nav-link>
+                    
+                    @if(Auth::user()->isSuperAdmin() || Auth::user()->isSeller())
+                        <x-nav-link :href="route('services.create')" :active="request()->routeIs('services.create')" wire:navigate>
+                            {{ __('Tambah Jasa') }}
+                        </x-nav-link>
+                    @endif
+
+                    @if(Auth::user()->isSuperAdmin())
+                        <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')" wire:navigate>
+                            {{ __('Kelola Users') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -34,7 +49,7 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
+                        <x-dropdown-link :href="route('profile.edit')" wire:navigate>
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
@@ -67,9 +82,24 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.index')" wire:navigate>
+                {{ __('Jelajahi Jasa') }}
+            </x-responsive-nav-link>
+            
+            @if(Auth::user()->isSuperAdmin() || Auth::user()->isSeller())
+                <x-responsive-nav-link :href="route('services.create')" :active="request()->routeIs('services.create')" wire:navigate>
+                    {{ __('Tambah Jasa') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if(Auth::user()->isSuperAdmin())
+                <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')" wire:navigate>
+                    {{ __('Kelola Users') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
@@ -80,7 +110,7 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
+                <x-responsive-nav-link :href="route('profile.edit')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 

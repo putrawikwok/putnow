@@ -1,23 +1,23 @@
-@extends('layouts.putnow')
+@extends('layouts.admin')
 
-@section('content')
+@section('admin-content')
 
-<div class="max-w-7xl mx-auto px-6 py-12">
+<div>
 
     {{-- Judul --}}
-    <h1 class="text-4xl font-bold text-blue-600">
+    <h1 class="text-2xl font-bold text-blue-600">
         👑 Dashboard Super Admin
     </h1>
 
-    <p class="mt-2 text-gray-600">
+    <p class="mt-1 text-sm text-gray-600">
         Selamat datang,
-        <span class="font-semibold">
+        <span class="font-semibold text-gray-800">
             {{ auth()->user()->name }}
         </span>
     </p>
 
     {{-- Statistik --}}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
 
     <x-dashboard-card
         icon="👥"
@@ -50,26 +50,22 @@
 </div> {{-- End Statistik --}}
 
     {{-- Quick Action --}}
-    <div class="bg-white rounded-2xl shadow mt-10 p-8">
+    <div class="border-t border-gray-100 mt-8 pt-6">
 
-        <h2 class="text-2xl font-bold">
+        <h2 class="text-lg font-bold text-gray-800">
             ⚡ Quick Action
         </h2>
 
-        <div class="flex flex-wrap gap-4 mt-6">
+        <div class="flex flex-wrap gap-3 mt-4">
 
-            <a href="{{ route('services.create') }}"
-                class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700">
-
+            <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'create-service')"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-xs font-bold transition">
                 ➕ Tambah Jasa
-
-            </a>
+            </button>
 
             <a href="{{ route('services.index') }}"
-                class="bg-gray-800 text-white px-6 py-3 rounded-xl hover:bg-gray-900">
-
+                class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900 text-xs font-bold transition">
                 📋 Semua Jasa
-
             </a>
 
         </div>
@@ -77,13 +73,13 @@
     </div> {{-- End Quick Action --}}
 
     {{-- Informasi Sistem --}}
-    <div class="bg-white rounded-2xl shadow mt-10 p-8">
+    <div class="border-t border-gray-100 mt-8 pt-6">
 
-        <h2 class="text-2xl font-bold">
+        <h2 class="text-lg font-bold text-gray-800">
             📌 Informasi Sistem
         </h2>
 
-        <div class="mt-6 space-y-3">
+        <div class="mt-4 space-y-2 text-sm text-gray-600">
 
             <p>
                 <strong>Versi :</strong> PutNow v1.0
@@ -113,5 +109,8 @@
     </div> {{-- End Informasi Sistem --}}
 
 </div> {{-- End Container --}}
+
+<!-- Include the Create Service Modal -->
+<x-create-service-modal />
 
 @endsection
